@@ -14,14 +14,28 @@
     <h1>Fortnite Private Party Generator</h1>
     <p>Script pour créer une party privée Fortnite et auto-accepter les demandes de join (amis).</p>
 
-    <p><strong>Installation</strong></p>
-    <pre>pip install -U rebootpy</pre>
+    <p><strong>Code de la partie</strong></p>
 
-    <p><strong>Lancer localement</strong></p>
-    <pre>python3 fortnite_private_party_generator.py</pre>
+    <div style="margin-bottom:1rem;">
+      <label for="partyCode">Entrez un code existant ou générez-en un :</label>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <input id="partyCode" type="text" placeholder="Ex: ABC123" style="flex:1; padding:8px; font-size:1rem;" />
+        <button id="generateBtn" class="button">Générer</button>
+        <button id="copyBtn" class="button" style="background:#28a745">Copier</button>
+      </div>
+    </div>
+
+    <div id="status" style="margin-bottom:1rem;color:#073642"></div>
 
     <p>
-      Téléchargement du script brut :
+      Si vous <strong>créez</strong> une partie : copiez le code affiché et utilisez le script local pour créer la party avec ce code. Si vous voulez <strong>rejoindre</strong> une partie, entrez ce code dans le lobby Fortnite (option "Entrer un code de partie" dans le jeu).
+    </p>
+
+    <p><strong>Installer et lancer le script (optionnel)</strong></p>
+    <pre>pip install -U rebootpy
+python3 fortnite_private_party_generator.py</pre>
+
+    <p>Téléchargement du script brut :
       <a class="button" href="https://raw.githubusercontent.com/hectorsaintjust-cpu/Cr-ateur-partir-priv-Fortnite-/main/fortnite_private_party_generator.py" target="_blank">Télécharger le script</a>
     </p>
 
@@ -32,7 +46,41 @@
     </ul>
 
     <footer>
-      <p>Page générée automatiquement pour hébergement via GitHub Pages.</p>
+      <p>Page statique simple — le bouton "Générer" produit un code localement. Le site ne crée pas la party à votre place ; utilisez le script local ou le jeu pour appliquer le code.</p>
     </footer>
+
+    <script>
+      // Simple client-side code: generate and copy a short alphanumeric code
+      function makeCode(len) {
+        const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+        let s = '';
+        for (let i = 0; i < len; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+        return s;
+      }
+
+      const codeInput = document.getElementById('partyCode');
+      const gen = document.getElementById('generateBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const status = document.getElementById('status');
+
+      gen.addEventListener('click', () => {
+        const code = makeCode(6);
+        codeInput.value = code;
+        status.textContent = 'Code généré — copiez-le et partagez avec vos amis.';
+      });
+
+      copyBtn.addEventListener('click', async () => {
+        const val = codeInput.value.trim();
+        if (!val) { status.textContent = 'Aucun code à copier.'; return; }
+        try {
+          await navigator.clipboard.writeText(val);
+          status.textContent = 'Code copié dans le presse-papier.';
+        } catch (err) {
+          // Fallback: select the input and instruct user to copy
+          codeInput.select();
+          status.textContent = 'Impossible de copier automatiquement. Sélectionnez et copiez manuellement (Ctrl+C).';
+        }
+      });
+    </script>
   </body>
 </html>
