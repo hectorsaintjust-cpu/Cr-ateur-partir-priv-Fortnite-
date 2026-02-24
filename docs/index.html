@@ -3,130 +3,28 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Fortnite Private Party Generator</title>
+    <title>Code de la partie</title>
     <style>
-      body { font-family: system-ui,Segoe UI,Roboto,Helvetica,Arial; max-width: 780px; margin: 3rem auto; line-height:1.5; padding: 0 1rem; }
-      pre { background:#f6f8fa; padding:1rem; overflow:auto }
-      a.button { display:inline-block; padding:8px 12px; background:#0366d6; color:#fff; border-radius:6px; text-decoration:none }
+      body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;max-width:720px;margin:4rem auto;padding:0 1rem}
+      h1{font-size:1.6rem;margin-bottom:1rem}input{padding:10px;font-size:1.1rem;width:100%;box-sizing:border-box}
+      .controls{display:flex;gap:8px;margin-top:8px}.btn{padding:8px 12px;background:#0366d6;color:#fff;border-radius:6px;border:none;cursor:pointer}
+      .btn.copy{background:#28a745}.status{margin-top:12px;color:#073642}
     </style>
   </head>
   <body>
-    <h1>Fortnite Private Party Generator</h1>
-    <p>Script pour créer une party privée Fortnite et auto-accepter les demandes de join (amis).</p>
-
-    <h2>Code de la partie</h2>
-
-    <div style="margin-bottom:1rem;">
-      <label for="partyCode">Entrez un code ou générez-en un :</label>
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <input id="partyCode" type="text" placeholder="Ex: ABC123" style="flex:1; padding:8px; font-size:1rem;" />
-        <button id="generateBtn" class="button">Générer</button>
-        <button id="copyBtn" class="button" style="background:#28a745">Copier</button>
-      </div>
+    <h1>Code de la partie</h1>
+    <input id="partyCode" placeholder="Ex: ABC123" autocomplete="off" />
+    <div class="controls">
+      <button id="generateBtn" class="btn">Générer</button>
+      <button id="copyBtn" class="btn copy">Copier</button>
     </div>
-
-    <div id="status" style="margin-bottom:1rem;color:#073642"></div>
-
-    <p>Pour créer une partie privée : générez ou saisissez un code ci-dessus et partagez-le avec vos amis.</p>
-    <p>Pour rejoindre une partie : ouvrez Fortnite → Lobby → Entrer le code de la partie → collez le code ci-dessus.</p>
-
-    <h2>Confidentialité</h2>
-    <ul>
-      <li>Cette page est purement locale et statique : elle génère/copier des codes côté client.</li>
-      <li>La page ne crée pas automatiquement de parties sur Fortnite ; utilisez le jeu ou votre outil local pour appliquer le code.</li>
-    </ul>
-
-    <footer>
-      <p>Simple et clair : entrez ou générez un code, puis utilisez-le dans Fortnite.</p>
-    </footer>
-
+    <div id="status" class="status">Générez ou collez le code, puis utilisez-le dans Fortnite (Lobby → Entrer le code).</div>
     <script>
-      // Minimal client-side code: generate and copy a short alphanumeric code
-      <!doctype html>
-      <html lang="fr">
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width,initial-scale=1">
-          <title>Code de la partie</title>
-          <style>
-            body { font-family: system-ui,Segoe UI,Roboto,Helvetica,Arial; max-width:720px; margin:4rem auto; padding:0 1rem; }
-            h1 { font-size:1.6rem; margin-bottom:1rem }
-            input { padding:10px; font-size:1.1rem; width:100%; box-sizing:border-box }
-            .controls { display:flex; gap:8px; margin-top:8px }
-            .btn { padding:8px 12px; background:#0366d6; color:#fff; border-radius:6px; border:none; cursor:pointer }
-            .btn.copy { background:#28a745 }
-            .status { margin-top:12px; color:#073642 }
-          </style>
-        </head>
-        <body>
-          <h1>Code de la partie</h1>
-          <input id="partyCode" placeholder="Ex: ABC123" autocomplete="off" />
-          <div class="controls">
-            <button id="generateBtn" class="btn">Générer</button>
-            <button id="copyBtn" class="btn copy">Copier</button>
-          </div>
-          <div id="status" class="status">Générez ou collez le code, puis utilisez-le dans Fortnite (Lobby → Entrer le code).</div>
-
-          <script>
-            function makeCode(len) {
-              const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-              let s = '';
-              for (let i = 0; i < len; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
-              return s;
-            }
-
-            const codeInput = document.getElementById('partyCode');
-            const gen = document.getElementById('generateBtn');
-            const copyBtn = document.getElementById('copyBtn');
-            const status = document.getElementById('status');
-
-            gen.addEventListener('click', () => {
-              const code = makeCode(6);
-              codeInput.value = code;
-              status.textContent = 'Code généré — copiez-le et partagez.';
-            });
-
-            copyBtn.addEventListener('click', async () => {
-              const val = codeInput.value.trim();
-              if (!val) { status.textContent = 'Aucun code à copier.'; return; }
-              try {
-                await navigator.clipboard.writeText(val);
-                status.textContent = 'Code copié dans le presse-papier.';
-              } catch (err) {
-                codeInput.select();
-                status.textContent = 'Impossible de copier automatiquement. Sélectionnez et copiez manuellement.';
-              }
-            });
-          </script>
-        </body>
-      </html>
-            let s = '';
-            for (let i = 0; i < len; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
-            return s;
-          }
-
-          const codeInput = document.getElementById('partyCode');
-          const gen = document.getElementById('generateBtn');
-          const copyBtn = document.getElementById('copyBtn');
-          const status = document.getElementById('status');
-
-          gen.addEventListener('click', () => {
-            const code = makeCode(6);
-            codeInput.value = code;
-            status.textContent = 'Code généré — copiez-le et partagez.';
-          });
-
-          copyBtn.addEventListener('click', async () => {
-            const val = codeInput.value.trim();
-            if (!val) { status.textContent = 'Aucun code à copier.'; return; }
-            try {
-              await navigator.clipboard.writeText(val);
-              status.textContent = 'Code copié dans le presse-papier.';
-            } catch (err) {
-              codeInput.select();
-              status.textContent = 'Impossible de copier automatiquement. Sélectionnez et copiez manuellement.';
-            }
-          });
-        </script>
-      </body>
-    </html>
+      function makeCode(len){const c='ABCDEFGHJKMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<len;i++)s+=c.charAt(Math.floor(Math.random()*c.length));return s}
+      const codeInput=document.getElementById('partyCode'), gen=document.getElementById('generateBtn'), copyBtn=document.getElementById('copyBtn'), status=document.getElementById('status');
+      gen.addEventListener('click',()=>{codeInput.value=makeCode(6);status.textContent='Code généré — copiez-le et partagez.'});
+      copyBtn.addEventListener('click',async()=>{const v=codeInput.value.trim();if(!v){status.textContent='Aucun code.';return}try{await navigator.clipboard.writeText(v);status.textContent='Code copié.'}catch{codeInput.select();status.textContent='Copiez manuellement.'}});
+    </script>
+  </body>
+</html>
+    <p>Pour créer une partie privée : générez ou saisissez un code ci-dessus et partagez-le avec vos amis.</p>
