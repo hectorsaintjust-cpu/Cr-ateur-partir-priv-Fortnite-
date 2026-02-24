@@ -71,6 +71,68 @@
           status.textContent = 'Impossible de copier automatiquement. Sélectionnez et copiez manuellement (Ctrl+C).';
         }
       });
-    </script>
-  </body>
-</html>
+    <!doctype html>
+    <html lang="fr">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Code de la partie</title>
+        <style>
+          body { font-family: system-ui,Segoe UI,Roboto,Helvetica,Arial; max-width:720px; margin:4rem auto; padding:0 1rem; }
+          h1 { font-size:1.6rem; margin-bottom:1.25rem }
+          label { display:block; margin-bottom:0.5rem }
+          input { padding:10px; font-size:1.1rem; width:100%; box-sizing:border-box }
+          .controls { display:flex; gap:8px; margin-top:8px }
+          .btn { padding:8px 12px; background:#0366d6; color:#fff; border-radius:6px; border:none; cursor:pointer }
+          .btn.copy { background:#28a745 }
+          .status { margin-top:12px; color:#073642 }
+          footer { margin-top:2rem; color:#666; font-size:0.9rem }
+        </style>
+      </head>
+      <body>
+        <h1>Code de la partie</h1>
+
+        <label for="partyCode">Entrez ou générez le code de la partie :</label>
+        <input id="partyCode" type="text" placeholder="Ex: ABC123" autocomplete="off" />
+        <div class="controls">
+          <button id="generateBtn" class="btn">Générer</button>
+          <button id="copyBtn" class="btn copy">Copier</button>
+        </div>
+        <div id="status" class="status">Générez un code ou collez celui fourni par l'hôte, puis utilisez-le dans Fortnite (Lobby → Entrer le code).</div>
+
+        <footer>Page minimale : uniquement champ « Code de la partie » pour générer ou copier un code.</footer>
+
+        <script>
+          // Minimal client-side code: generate and copy a short alphanumeric code
+          function makeCode(len) {
+            const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+            let s = '';
+            for (let i = 0; i < len; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+            return s;
+          }
+
+          const codeInput = document.getElementById('partyCode');
+          const gen = document.getElementById('generateBtn');
+          const copyBtn = document.getElementById('copyBtn');
+          const status = document.getElementById('status');
+
+          gen.addEventListener('click', () => {
+            const code = makeCode(6);
+            codeInput.value = code;
+            status.textContent = 'Code généré — copiez-le et partagez.';
+          });
+
+          copyBtn.addEventListener('click', async () => {
+            const val = codeInput.value.trim();
+            if (!val) { status.textContent = 'Aucun code à copier.'; return; }
+            try {
+              await navigator.clipboard.writeText(val);
+              status.textContent = 'Code copié dans le presse-papier.';
+            } catch (err) {
+              codeInput.select();
+              status.textContent = 'Impossible de copier automatiquement. Sélectionnez et copiez manuellement.';
+            }
+          });
+        </script>
+      </body>
+    </html>
