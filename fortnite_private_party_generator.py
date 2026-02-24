@@ -180,6 +180,56 @@ async def main() -> None:
             print("Instructions: Add this account as friend in Fortnite, send join request. Bot auto-accepts!")
             print("Press Ctrl+C to leave party.")
 
+            # Simple flow: ask for a party code to set so friends can join easily
+            try:
+                loop = asyncio.get_running_loop()
+                code = await loop.run_in_executor(None, input, "Enter party code to set (or press Enter to skip): ")
+                code = (code or "").strip()
+                if code:
+                    # Try several common method names to set a party code (best-effort)
+                    async def try_set_code(party_obj, code_str):
+                        methods = (
+                            "set_join_code",
+                            "set_join_key",
+                            "set_access_key",
+                            "set_party_code",
+                            "set_custom_key",
+                            "set_privacy_key",
+                            "set_code",
+                            "set_invite_code",
+                            "set_password",
+                            "set_join_password",
+                        )
+                        for m in methods:
+                            fn = getattr(party_obj, m, None)
+                            if fn is None:
+                                continue
+                            try:
+                                res = fn(code_str)
+                                if asyncio.iscoroutine(res):
+                                    await res
+                                print(f"Party code set via {m}")
+                                return True
+                            except Exception:
+                                continue
+                        # Fallback: try to set on party.config if writable
+                        try:
+                            cfg = getattr(party_obj, "config", None)
+                            if cfg is not None and hasattr(cfg, "__dict__"):
+                                setattr(cfg, "code", code_str)
+                                print("Party code stored on party.config.code (best-effort)")
+                                return True
+                        except Exception:
+                            pass
+                        return False
+
+                    ok = await try_set_code(party, code)
+                    if ok:
+                        print(f"✅ Party code applied: {code}")
+                    else:
+                        print("Could not apply party code automatically. Please share the code with friends manually.")
+            except Exception as e:
+                print(f"Error while handling party code input: {e}")
             # Attempt to extract and save device auth for future runs
             try:
                 device_blob = extract_device_auth_from_auth(auth)
